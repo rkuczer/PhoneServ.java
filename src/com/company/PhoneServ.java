@@ -49,10 +49,10 @@ class ClientThread extends Thread //thread created for client that has data inpu
     @Override
     public void run()
     {
-        String data_file_name = "phone_data.txt";
-        String tmp_data_file_name = "phone_data.tmp";
+        String users = "phone_data.txt"; //saves user data to text file
+        String tempData = "phone_data.tmp";
         String received = "";
-        String toreturn = "";
+        String send = "";
         String name_deleted = "";
         String keys[];
         String get_tokens[];
@@ -76,37 +76,34 @@ class ClientThread extends Thread //thread created for client that has data inpu
                 switch(keys[0]) {
 
                     case "STORE":
-                        FileWriter writer = new FileWriter(data_file_name, true);
+                        FileWriter writer = new FileWriter(users, true);
                         writer.write(keys[1] + " " + keys[2] + "\n");
                         writer.close();
-                        toreturn = "'" + keys[1] + " " + keys[2] + "' has been stored in local text file.";
-                        dos.writeUTF(toreturn);
+                        send = "'" + keys[1] + " " + keys[2] + "' has been stored in local text file.";
+                        dos.writeUTF(send);
                         break;
 
                     case "GET":
-                        File phone_data = new File(data_file_name);
+                        File phone_data = new File(users);
                         Scanner reader = new Scanner(phone_data);
 
                         while (reader.hasNextLine()) {
                             String data = reader.nextLine();
                             get_tokens = data.split(" ");
-
                             // If line in text file matches client's request, send it back to client.
                             if (get_tokens[0].contains(keys[1])) {
-                                toreturn = get_tokens[0] + " phone # is -> " + get_tokens[1];
+                                send = get_tokens[0] + " phone # is -> " + get_tokens[1];
                                 break;
                             }
-
-                            toreturn = "No name was found with that request.";
+                            send = "No name was found with that request.";
                         }
-
                         reader.close();
-                        dos.writeUTF(toreturn);
+                        dos.writeUTF(send);
                         break;
 
                     case "REMOVE":
-                        FileWriter writer_tmp = new FileWriter(tmp_data_file_name);
-                        File phone_data_tmp = new File(data_file_name);
+                        FileWriter writer_tmp = new FileWriter(tempData);
+                        File phone_data_tmp = new File(users);
                         Scanner reader_tmp = new Scanner(phone_data_tmp);
 
                         while (reader_tmp.hasNextLine()) {
@@ -117,9 +114,7 @@ class ClientThread extends Thread //thread created for client that has data inpu
                                 // dont write to the new temp file
                                 name_deleted = get_tokens[0] + " was deleted from the database.";
                                 continue;
-
                             } else {
-
                                 writer_tmp.write(get_tokens[0] + " " + get_tokens[1] + "\n");
                                 System.out.println("Writing to temp file " + get_tokens[0] + " " + get_tokens[1]);
                             }
@@ -127,25 +122,19 @@ class ClientThread extends Thread //thread created for client that has data inpu
 
                         writer_tmp.close();
                         reader_tmp.close();
-
                         // Delete original file & replace with new file
-                        File original_file = new File(data_file_name);
+                        File original_file = new File(users);
                         original_file.delete();
-
-                        File oldName = new File(tmp_data_file_name);
-                        File newName = new File(data_file_name);
+                        File oldName = new File(tempData);
+                        File newName = new File(users);
                         oldName.renameTo(newName);
-
                         dos.writeUTF(name_deleted);
                         break;
 
                     default:
-                        dos.writeUTF("Erroneous message received. That is not a valid option. Please try again.");
+                        dos.writeUTF("Error in the received message. That is not a valid option. Please try again.");
                         break;
-
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

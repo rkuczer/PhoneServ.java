@@ -21,14 +21,14 @@ public class PhoneClient {
         DataInputStream dis = new DataInputStream(connection_to_PServer.getInputStream());
         DataOutputStream dos = new DataOutputStream(connection_to_PServer.getOutputStream());
 
-        while (true)
+        while (true) //input loop
         {
             System.out.println(dis.readUTF());
             System.out.println("INPUT> ");
             String tosend = scanner.nextLine();
             dos.writeUTF(tosend);
 
-            if(tosend.equals("QUIT"))
+            if(tosend.equals("QUIT")) //when quit is typed it closes the connection
             {
                 System.out.println("Closing this connection : " + connection_to_PServer);
                 connection_to_PServer.close();
@@ -36,7 +36,7 @@ public class PhoneClient {
                 break;
             }
             String received_from_server = dis.readUTF();
-            System.out.println(received_from_server);
+            System.out.println(received_from_server); //prints the received info from the server
         }
 
     }
