@@ -24,16 +24,16 @@ public class PhoneClient {
         while (true) //input loop
         {
             System.out.println(dis.readUTF());
-            System.out.println("INPUT> ");
+            System.out.println("INPUT> ");  //prompts user for input
             String tosend = scanner.nextLine();
-            dos.writeUTF(tosend);
+            dos.writeUTF(tosend); //writes the next line to output streamn
 
             if(tosend.equals("QUIT")) //when quit is typed it closes the connection
             {
                 System.out.println("Closing this connection : " + connection_to_PServer);
                 connection_to_PServer.close();
                 System.out.println("Connection closed");
-                break;
+                break;//closes connection
             }
             String received_from_server = dis.readUTF();
             System.out.println(received_from_server); //prints the received info from the server

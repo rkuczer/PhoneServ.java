@@ -43,10 +43,10 @@ class ClientThread extends Thread //thread created for client that has data inpu
     // Constructor
     public ClientThread(Socket s, DataInputStream dis, DataOutputStream dos) {
         this.s = s;
-        this.dis = dis;
+        this.dis = dis; //initializes variable for constructors
         this.dos = dos;
     }
-    @Override
+    @Override//exported method for run()
     public void run()
     {
         String users = "phone_data.txt"; //saves user data to text file
@@ -60,13 +60,13 @@ class ClientThread extends Thread //thread created for client that has data inpu
             try {
 
                 dos.writeUTF("\n**** PHONE SERVER ****\n-> STORE <name> <number> \t(where <number> = xxx-xxxx)\n" +
-                        "-> GET <name>\n-> REMOVE <name>\n-> QUIT");
+                        "-> GET <name>\n-> REMOVE <name>\n-> QUIT"); //prompts users
 
                 received = dis.readUTF();
-                keys = received.split(" ");
+                keys = received.split(" "); //splits the string array received if there are any spaces in the input
 
                 if(received.equals("QUIT"))
-                {
+                { //disconnects client from server
                     System.out.println("Client " + this.s + " is disconnecting from server...");
                     this.s.close();
                     System.out.println("Connection closed to client: " + this.s);
@@ -74,7 +74,7 @@ class ClientThread extends Thread //thread created for client that has data inpu
                 }
 
                 switch(keys[0]) {
-
+                //swith case statement for different options that can be chosen
                     case "STORE":
                         FileWriter writer = new FileWriter(users, true);
                         writer.write(keys[1] + " " + keys[2] + "\n");
